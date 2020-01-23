@@ -9,19 +9,19 @@ class Atendimento {
         /////////Tratamento dos dados//////////////////
         //checando campos[boleanos]
         const dataEhValida = moment(data).isSameOrAfter(dataCriacao)
-        const clienteEhValido = atendimento.cliente.length >=5
+        const clienteEhValido = atendimento.cliente.length >= 5
 
         //estrutura para cada campo
-        const validacao = [
+        const validacoes = [
             {
                 nome: 'data',
                 valido: dataEhValida,
-                menssagem: 'data deve ser no futuro'
+                mensagem: 'Data deve ser maior ou igual a data atual'
             },
             {
                 nome: 'cliente',
                 valido: clienteEhValido,
-                menssagem: 'cliente deve posuir pelo menos 5 caracteres'
+                mensagem: 'Cliente deve ter pelo menos cinco caracteres'
             }
         ]
 
@@ -42,6 +42,42 @@ class Atendimento {
 
         
     }
+
+    lista(res){
+        const sql = 'SELECT * FROM Atendimentos'
+
+        conexao.query(sql, (erro, resultados) =>{
+            if(erro) res.status(400).json(erro)
+            else res.status(200).json(resultados)
+        })
+    }
+
+    buscaPorId(res, id) {
+        const sql = `SELECT * FROM Atendimentos WHERE id=${id}`
+
+        conexao.query(sql, (erro, resultados) => {
+            const atendimento = resultados[0]
+            if(erro) {
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json(atendimento)
+            }
+        })
+    }
+
+    altera(res, id) {
+        const sql = `ALTER TABLE Atendimentos WHERE id=${id}`
+
+        conexao.query(sql, (erro, resultados) => {
+            const atendimento = resultados[0]
+            if(erro) {
+                res.status(400).json(erro)
+            } else {
+                res.status(200).json(atendimento)
+            }
+        })
+    }
+
 }
 
 module.exports = new Atendimento;
